@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System;
+﻿using System;
 using System.IO;
 
 namespace ArdalisRating
@@ -11,6 +9,7 @@ namespace ArdalisRating
     /// </summary>
     public class RatingEngine
     {
+        private PolicySerializer PolicySerializer { get; set; } = new PolicySerializer();
         private FilePolicySource PolicySource { get; set; } = new FilePolicySource();
         private ConsoleLogger Logger { get; set; } = new ConsoleLogger();
         public decimal Rating { get; set; }
@@ -22,8 +21,7 @@ namespace ArdalisRating
             // load policy - open file policy.json
             string policyJson = PolicySource.GetPolicyFromSource();
 
-            var policy = JsonConvert.DeserializeObject<Policy>(policyJson,
-                new StringEnumConverter());
+            var policy = PolicySerializer.GetPolicyFromJsonString(policyJson);
 
             switch (policy.Type)
             {
