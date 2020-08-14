@@ -1,8 +1,9 @@
 using System.IO;
+using ArdalisRating.Abstractions;
 
 namespace ArdalisRating 
 {
-    public class FilePolicySource 
+    public class FilePolicySource : IPolicySource
     {
         public string GetPolicyFromSource()
         {

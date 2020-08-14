@@ -1,25 +1,26 @@
 
 using ArdalisRating.Abstractions;
+using System;
 
 namespace ArdalisRating {
     sealed class FloodPolicyEngine : PolicyEngine 
     {
-        public FloodPolicyEngine(IRatingUpdater ratingUpdater, ILogger logger) :
-            base(logger, ratingUpdater)
+        public FloodPolicyEngine(ILogger logger) :
+            base(logger)
         { }
 
-        public override void Rate(Policy policy) 
+        public override decimal Rate(Policy policy) 
         {
             logger.Log("Rating FLOOD policy...");
             logger.Log("Validating policy.");
             if (policy.BondAmount == 0 || policy.Valuation == 0){
                 logger.Log("Flood policy must specify bond amount and valuation");
-                return;
+                return NO_RATE;
             }
 
             if (policy.ElevationAboveSeaLevelFeet <= 0){
                 logger.Log("Flood policy is not available for elevations at or below sea level");
-                return;
+                return NO_RATE;
             }
 
             decimal multiple = 1.0m;
@@ -31,7 +32,7 @@ namespace ArdalisRating {
                 multiple = 1.1m;
             }
 
-            ratingUpdater.UpdateRating(policy.BondAmount * 0.05m * multiple);
+            return policy.BondAmount * 0.05m * multiple;
         }
     }
 }

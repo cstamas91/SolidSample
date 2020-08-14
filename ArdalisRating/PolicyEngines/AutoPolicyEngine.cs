@@ -5,30 +5,29 @@ namespace ArdalisRating
 {
     sealed class AutoPolicyEngine : PolicyEngine 
     {
-        public AutoPolicyEngine(IRatingUpdater ratingUpdater, ILogger logger) :
-            base(logger, ratingUpdater)
+        public AutoPolicyEngine(ILogger logger) :
+            base(logger)
         { }
 
-        public override void Rate(Policy policy) 
+        public override decimal Rate(Policy policy) 
         {
             logger.Log("Rating AUTO policy...");
             logger.Log("Validating policy.");
             if (string.IsNullOrEmpty(policy.Make))
             {
                 logger.Log("Auto policy must specify Make");
-                return;
+                return 0m;
             }
 
             if (policy.Make != "BMW")
-                return;
+                return 0m;
 
             if (policy.Deductible < 500)
             {
-                ratingUpdater.UpdateRating(1000m);
-                return;
+                return 1000m;
             }
 
-            ratingUpdater.UpdateRating(900m);
+            return 900m;
         }
     }
 }

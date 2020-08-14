@@ -2,17 +2,16 @@
 using ArdalisRating.Abstractions;
 
 namespace ArdalisRating {
-    abstract class PolicyEngine 
+    public abstract class PolicyEngine 
     {
         protected readonly ILogger logger;
-        protected readonly IRatingUpdater ratingUpdater;
+        protected const decimal NO_RATE = 0m;
 
-        public PolicyEngine(ILogger logger, IRatingUpdater ratingUpdater)
+        public PolicyEngine(ILogger logger)
         {
             this.logger = logger;
-            this.ratingUpdater = ratingUpdater;
         }
 
-        public abstract void Rate(Policy policy);
+        public abstract decimal Rate(Policy policy);
     }
 }
