@@ -9,10 +9,10 @@ namespace ArdalisRating
     /// </summary>
     public class RatingEngine
     {
+        public ConsoleLogger Logger { get; set; } = new ConsoleLogger();
         private PolicySerializer PolicySerializer { get; set; } = new PolicySerializer();
         private FilePolicySource PolicySource { get; set; } = new FilePolicySource();
-        public ConsoleLogger Logger { get; set; } = new ConsoleLogger();
-        private PolicyEngineFactory Factory {get;set;} = new PolicyEngineFactory();
+        private PolicyEngineFactory Factory { get; set; } = new PolicyEngineFactory();
         public decimal Rating { get; set; }
         public void Rate()
         {
@@ -25,6 +25,8 @@ namespace ArdalisRating
             var policy = PolicySerializer.GetPolicyFromJsonString(policyJson);
             var policyEngine = Factory.Create(policy, this);
             policyEngine.Rate(policy);
+
+
             Logger.Log("Rating completed.");
         }
     }
