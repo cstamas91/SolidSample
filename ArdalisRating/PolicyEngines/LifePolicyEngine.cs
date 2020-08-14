@@ -1,31 +1,30 @@
+using ArdalisRating.Abstractions;
 using System;
 
-namespace ArdalisRating {
-    sealed class LifePolicyEngine : PolicyEngine {
-        private readonly RatingEngine _engine;
-        private readonly ConsoleLogger _logger;
+namespace ArdalisRating 
+{
+    sealed class LifePolicyEngine : PolicyEngine 
+    {
+        public LifePolicyEngine(IRatingUpdater ratingUpdater, ILogger logger) :
+            base(logger, ratingUpdater) { }
 
-        public LifePolicyEngine(RatingEngine engine, ConsoleLogger logger){
-            _engine = engine;
-            _logger = logger;
-        }
-
-        public override void Rate(Policy policy) {
-            _logger.Log("Rating LIFE policy...");
-            _logger.Log("Validating policy.");
+        public override void Rate(Policy policy) 
+        {
+            logger.Log("Rating LIFE policy...");
+            logger.Log("Validating policy.");
             if (policy.DateOfBirth == DateTime.MinValue)
             {
-                _logger.Log("Life policy must include Date of Birth.");
+                logger.Log("Life policy must include Date of Birth.");
                 return;
             }
             if (policy.DateOfBirth < DateTime.Today.AddYears(-100))
             {
-                _logger.Log("Centenarians are not eligible for coverage.");
+                logger.Log("Centenarians are not eligible for coverage.");
                 return;
             }
             if (policy.Amount == 0)
             {
-                _logger.Log("Life policy must include an Amount.");
+                logger.Log("Life policy must include an Amount.");
                 return;
             }
             int age = DateTime.Today.Year - policy.DateOfBirth.Year;
@@ -38,9 +37,9 @@ namespace ArdalisRating {
             decimal baseRate = policy.Amount * age / 200;
             if (policy.IsSmoker)
             {
-                _engine.Rating = baseRate * 2;
+                ratingUpdater.UpdateRating(baseRate * 2);
             }
-            _engine.Rating = baseRate;
+            ratingUpdater.UpdateRating(baseRate);
         }
     }
 }
